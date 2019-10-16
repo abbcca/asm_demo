@@ -1,0 +1,134 @@
+package java8;
+
+public class ByteCodeDemo {
+    private static final String name = "xiaoming";
+
+    private int age;
+
+    public ByteCodeDemo(int age) {
+        this.age = age;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public static void main(String[] args) {
+        ByteCodeDemo byteCodeDeomo = new ByteCodeDemo(12);
+        System.out.println("name:" + name + "age:" + byteCodeDeomo.getAge());
+    }
+}
+
+
+//class文件的完整路径
+Classfile /Users/lizhao/Documents/RPC/test/src/main/java/java8/ByteCodeDemo.class
+  Last modified 2018-5-8; size 861 bytes //class文件修改时间以及大小
+  MD5 checksum d225c0249912bec4b11c41a0a52e6418  //md5校验和
+  Compiled from "ByteCodeDemo.java"   //从哪个文件编译而来
+public class java8.ByteCodeDemo
+  minor version: 0
+  major version: 52  //java主版本  major_version.minor_version 组成我们的版本号52.0
+  flags: ACC_PUBLIC, ACC_SUPER //public,ACC_SUPER用于兼容早期编译器，新编译器都设置该标记，以在使用 invokespecial指令时对子类方法做特定处理。
+Constant pool:
+   #1 = Methodref          #14.#31        // java/lang/Object."<init>":()V
+   #2 = Fieldref           #3.#32         // java8/ByteCodeDemo.age:I
+   #3 = Class              #33            // java8/ByteCodeDemo
+   #4 = Methodref          #3.#34         // java8/ByteCodeDemo."<init>":(I)V
+   #5 = Fieldref           #35.#36        // java/lang/System.out:Ljava/io/PrintStream;
+   #6 = Class              #37            // java/lang/StringBuilder
+   #7 = Methodref          #6.#31         // java/lang/StringBuilder."<init>":()V
+   #8 = String             #38            // name:xiaomingage:
+   #9 = Methodref          #6.#39         // java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  #10 = Methodref          #3.#40         // java8/ByteCodeDemo.getAge:()I
+  #11 = Methodref          #6.#41         // java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+  #12 = Methodref          #6.#42         // java/lang/StringBuilder.toString:()Ljava/lang/String;
+  #13 = Methodref          #43.#44        // java/io/PrintStream.println:(Ljava/lang/String;)V
+  #14 = Class              #45            // java/lang/Object
+  #15 = Utf8               name
+  #16 = Utf8               Ljava/lang/String;
+  #17 = Utf8               ConstantValue
+  #18 = String             #46            // xiaoming
+  #19 = Utf8               age
+  #20 = Utf8               I
+  #21 = Utf8               <init>
+  ....省略部分
+  #58 = Utf8               (Ljava/lang/String;)V
+{
+  private static final java.lang.String name;
+    descriptor: Ljava/lang/String;
+    flags: ACC_PRIVATE, ACC_STATIC, ACC_FINAL
+    ConstantValue: String xiaoming
+
+  private int age;
+    descriptor: I
+    flags: ACC_PRIVATE
+
+  public java8.ByteCodeDemo(int);
+    descriptor: (I)V
+    flags: ACC_PUBLIC
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: iload_1
+         6: putfield      #2                  // Field age:I
+         9: return
+      LineNumberTable:
+        line 18: 0
+        line 19: 4
+        line 20: 9
+
+  public int getAge();
+    descriptor: ()I
+    flags: ACC_PUBLIC
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: getfield      #2                  // Field age:I
+         4: ireturn
+      LineNumberTable:
+        line 23: 0
+
+  public static void main(java.lang.String[]);
+     descriptor: ([Ljava/lang/String;)V //方法描述,入参是String，返回是void
+     flags: ACC_PUBLIC, ACC_STATIC
+     Code:
+       stack=3, locals=2, args_size=1 //栈深最大3，局部变量2,args_size入参是1(如果是实体方法会把this也算入参)
+          0: new           #3                  // class java8/ByteCodeDemo new指令创建对象，这里引用了常量池的class 所以这里一共占了三行 2个字节是class
+          //一个字节是new，所以下个行号是 0+3 = 3 并把当前申请的空间地址放到栈顶
+          3: dup 							   //将栈顶cpoy一份再次放入栈顶，也就是我们上面的空间地址
+          4: bipush        12				   //取常量12放入栈空间
+          6: invokespecial #4                  // Method "<init>":(I)V //执行初始化方法这个时候会用到4的栈顶，和3的栈顶，弹出
+          9: astore_1						   //将栈顶放入局部变量，也就是0的空间地址，这个时候栈是空的
+         10: getstatic     #5                  // Field java/lang/System.out:Ljava/io/PrintStream; //获取这个方法地址到栈顶
+         13: new           #6                  // class java/lang/StringBuilder 把新开辟的空间地址放到栈顶
+         16: dup							   //复制一份
+         17: invokespecial #7                  // Method java/lang/StringBuilder."<init>":()V //弹出栈顶
+         20: ldc           #8                  // String name:xiaomingage://取常量到栈顶
+         22: invokevirtual #9                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;//弹出栈顶两个元素，压入StringBuilder的引用
+         25: aload_1						   // 把局部变量，也就是我们刚才的空间地址压入
+         26: invokevirtual #10                 // Method getAge:()I //弹出栈顶，获取年龄，把年龄压入栈顶
+         29: invokevirtual #11                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;//弹出栈顶两个元素，压入StringBuilder
+         32: invokevirtual #12                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;//弹出栈顶两个元素，压入toString
+         35: invokevirtual #13                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V//弹出栈顶两个元素，此时栈空
+         38: return //返回
+       LineNumberTable: //字节码偏移量到源代码行号之间的联系
+         line 29: 0
+         line 30: 10
+         line 31: 38
+ }
+
+
+https://juejin.im/post/5b51ff276fb9a04f914a922e#heading-21
+
+ClassReader:可以读取编译好的二进制Class文件
+ClassWriter:用来重新构建编译后的类，比如说修改类名、属性以及方法，甚至可以生成新的类的字节码文件。
+ClassVisitor:用于生成和变转已编译类。在ClassVisitor定义了很多方法，例如:类上的注解，类的构造方法，
+类的字段，类的方法，静态代码块访问。用于我们去重写，以便做一些类上的逻辑扩展。
+要注意的是ClassWriter继承的是ClassVistor,这里ClassWriter就可以边访问边写入。
+上面说了ClassVisitor,这里再说说其他的Visitor,ASM core api里的代码是根据字节码从上到下依次生成，
+可以看见里面还有一些其他的Visitor，比如MethodVisitor，用于访问Method，如果重写其部分方法可以对
+方法进行修改。FieldVisitor，用于访问类的变量，常量，如果重写其部分方法可以进行修改。
+AnnotationVisitor，用于访问的注解。
+
