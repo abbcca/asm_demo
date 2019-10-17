@@ -1,0 +1,31 @@
+相当于public void halloAop()方法声明
+mv = cw.visitMethod(ACC_PUBLIC, "halloAop", "()V", null, null);
+正式开放方法内容的填充
+mv.visitCode();
+调用静态方法，相当于：“AopInterceptor.beforeInvoke();”
+mv.visitMethodInsn(INVOKESTATIC, "org/more/test/asm/AopInterceptor", "beforeInvoke", "()V");
+调用静态字段将其放入堆栈，相当于“System.out”“Ljava/io/PrintStream;”是字段类型的描述，
+翻译过来相当于：“java.io.PrintStream”类型。
+在字节码中凡是引用类型均由“L”开头“;”结束表示，中间是类型的完整名称。
+mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+将字符串“Hello Aop”放入堆栈，此时堆栈中第一个元素是"System.out",第二个元素是"Hello Aop"
+mv.visitLdcInsn("Hello Aop");
+调用PrintStream类型的“println”方法。签名“(Ljava/lang/String;)V”表示方法需要一个字符串类型的参数，并且无返回值
+mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V");
+调用静态方法，相当于：“AopInterceptor.afterInvoke();”。
+mv.visitMethodInsn(INVOKESTATIC, "org/more/test/asm/AopInterceptor", "afterInvoke", "()V");
+是 JVM 在编译时为方法自动加上的“return”指令。该指令必须在方法结束时执行不可缺少。
+mv.visitInsn(RETURN);
+表示在执行这个方法期间方法的堆栈空间最大给予多少
+mv.visitMaxs(2, 1);
+表示方法输出结束
+mv.visitEnd();
+
+
+
+
+invokevirtual指令:调用对象的实例方法，根据对象的实际类型进行分派(虚拟机分派)。
+invokeinterface指令:调用接口方法，在运行时搜索一个实现这个接口方法的对象，找出合适的方法进行调用。
+invokespecial:调用需要特殊处理的实例方法，包括实例初始化方法，私有方法和父类方法
+invokestatic:调用类方法(static)
+
